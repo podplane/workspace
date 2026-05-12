@@ -7,6 +7,7 @@ REPOS := \
 	podplane/workspace \
 	podplane/podplane \
 	podplane/vmconfig \
+	podplane/components \
 	podplane/kube2iam-binaries \
 	podplane/workers \
 	podplane/website \
