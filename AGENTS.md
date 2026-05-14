@@ -28,6 +28,13 @@ Use this repo's `Makefile` as the source of truth for the current managed reposi
 - `make status FETCH=0` — same status report without fetching remotes.
 - `make clone` — clone any missing repositories using SSH URLs.
 
+## Git Safety
+
+- Agents must never perform mutating git operations unless the user explicitly asks for that specific action and approval has been confirmed immediately beforehand.
+- Mutating git operations include staging or unstaging files, committing, amending, rebasing, merging, resetting, checking out branches or files, restoring files, cleaning untracked files, applying stashes, creating/deleting branches or tags, and pushing.
+- Never alter the user's index or working tree state as a convenience step. For example, do not unstage staged changes unless the user explicitly asked for that unstaging and confirmed approval.
+- Read-only git operations such as `git status`, `git diff`, `git log`, and `git show` are allowed.
+
 ## Cross-Project Orientation
 
 When the user describes a cross-component task, map project names to repositories like this:
