@@ -1,0 +1,73 @@
+{
+  "organizations": {
+    "dco_app": {
+      "required": true,
+      "slug": "dco",
+      "repository_selection": "all"
+    }
+  },
+  "repository": {
+    "default_branch": "main",
+    "visibility": "public",
+    "features": {
+      "has_wiki": false,
+      "has_issues": true,
+      "has_projects": false,
+      "has_discussions": false
+    },
+    "releases": {
+      "immutable": true
+    },
+    "pull_requests": {
+      "creation_policy": "collaborators_only",
+      "allow_merge_commit": true,
+      "allow_squash_merge": true,
+      "allow_rebase_merge": true,
+      "allow_auto_merge": false,
+      "delete_branch_on_merge": false,
+      "allow_update_branch": true,
+      "merge_commit_title": "MERGE_MESSAGE",
+      "merge_commit_message": "PR_TITLE",
+      "squash_merge_commit_title": "COMMIT_OR_PR_TITLE",
+      "squash_merge_commit_message": "COMMIT_MESSAGES"
+    },
+    "commits": {
+      "web_commit_signoff_required": true
+    }
+  },
+  "ruleset": {
+    "required": true,
+    // Leave name empty so any matching active ruleset is accepted.
+    "name": "",
+    "target": "branch",
+    "enforcement": "active",
+    "include_refs": ["~DEFAULT_BRANCH"],
+    "rules": {
+      "deletion": true,
+      "non_fast_forward": true,
+      "pull_request": {
+        "required_approving_review_count": 1,
+        "dismiss_stale_reviews_on_push": true,
+        "require_code_owner_review": false,
+        "require_last_push_approval": false
+      },
+      "required_status_checks": {
+        "required": true,
+        "checks": ["DCO"]
+      }
+    }
+  },
+  // Repositories are discovered from the Makefile REPOS block; this object is
+  // only for per-repo overrides or exceptions. Example:
+  // "repos": {
+  //   "podplane/kube2iam-binaries": {
+  //     "skip": true
+  //   },
+  //   "podplane/podplane": {
+  //     "repository": {
+  //       "default_branch": "main"
+  //     }
+  //   }
+  // }
+  "repos": {}
+}

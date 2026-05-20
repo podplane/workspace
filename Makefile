@@ -25,7 +25,7 @@ REPOS := \
 	puidv7/terraform-provider-puidv7 \
 	puidv7/website
 
-.PHONY: help list status clone
+.PHONY: help list status clone github-audit
 
 help:
 	@echo "Podplane workspace helper"
@@ -34,6 +34,7 @@ help:
 	@echo "  make list      Print the list of project-related Git repositories"
 	@echo "  make status    Show Git status for every repository in your workspace directory"
 	@echo "  make clone     Clone repositories not yet in your workspace directory"
+	@echo "  make github-audit  Audit GitHub org and repository settings against github-policy.jsonc"
 	@echo "  make help      Show this help screen"
 	@echo
 	@echo "Configuration:"
@@ -200,3 +201,8 @@ clone:
 		echo "clone: $$url -> $$path"; \
 		git clone "$$url" "$$path"; \
 	done
+
+github-audit:
+	@command -v go >/dev/null || { echo "go is required" >&2; exit 2; }
+	@command -v gh >/dev/null || { echo "gh is required; install GitHub CLI and run 'gh auth login'" >&2; exit 2; }
+	@go run ./cmd/github-audit -policy github-policy.jsonc -makefile Makefile
