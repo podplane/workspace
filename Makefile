@@ -4,6 +4,7 @@ WORKSPACE ?= $(HOME)/Workspace
 FETCH ?= 1
 
 REPOS := \
+	podplane/.github \
 	podplane/workspace \
 	podplane/podplane \
 	podplane/vmconfig \
@@ -11,15 +12,19 @@ REPOS := \
 	podplane/kube2iam-binaries \
 	podplane/workers \
 	podplane/website \
+	netsy-dev/.github \
 	netsy-dev/netsy \
 	netsy-dev/website \
+	nstance-dev/.github \
 	nstance-dev/nstance \
 	nstance-dev/terraform-aws-nstance \
 	nstance-dev/terraform-gcp-nstance \
 	nstance-dev/website \
+	easy-oidc/.github \
 	easy-oidc/easy-oidc \
 	easy-oidc/terraform-aws-easy-oidc \
 	easy-oidc/website \
+	puidv7/.github \
 	puidv7/puidv7-go \
 	puidv7/puidv7-js \
 	puidv7/terraform-provider-puidv7 \
