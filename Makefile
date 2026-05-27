@@ -13,6 +13,7 @@ REPOS := \
 	podplane/workers \
 	podplane/website \
 	netsy-dev/.github \
+	netsy-dev/conformance \
 	netsy-dev/netsy \
 	netsy-dev/website \
 	nstance-dev/.github \
