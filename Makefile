@@ -11,6 +11,7 @@ REPOS := \
 	podplane/components \
 	podplane/kube2iam-binaries \
 	podplane/templates \
+	podplane/hello \
 	podplane/workers \
 	podplane/website \
 	netsy-dev/.github \
