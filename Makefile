@@ -10,6 +10,7 @@ REPOS := \
 	podplane/vmconfig \
 	podplane/components \
 	podplane/kube2iam-binaries \
+	podplane/templates \
 	podplane/workers \
 	podplane/website \
 	netsy-dev/.github \
