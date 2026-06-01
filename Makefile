@@ -14,6 +14,7 @@ REPOS := \
 	podplane/hello \
 	podplane/workers \
 	podplane/seed \
+	podplane/seeds \
 	podplane/website \
 	podplane/terraform-aws-podplane \
 	podplane/terraform-gcp-podplane \
