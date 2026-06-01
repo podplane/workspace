@@ -13,7 +13,7 @@ REPOS := \
 	podplane/templates \
 	podplane/hello \
 	podplane/workers \
-	podplane/seed \
+	podplane/seedgen \
 	podplane/seeds \
 	podplane/website \
 	podplane/terraform-aws-podplane \
