@@ -16,8 +16,7 @@ REPOS := \
 	podplane/seedgen \
 	podplane/seeds \
 	podplane/website \
-	podplane/terraform-aws-podplane \
-	podplane/terraform-gcp-podplane \
+	podplane/terraform-provider-podplane \
 	netsy-dev/.github \
 	netsy-dev/conformance \
 	netsy-dev/netsy \
