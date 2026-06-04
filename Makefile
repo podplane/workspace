@@ -13,6 +13,9 @@ REPOS := \
 	podplane/templates \
 	podplane/hello \
 	podplane/workers \
+	podplane/s3lect \
+	podplane/homebrew-tap \
+	podplane/cla \
 	podplane/seedgen \
 	podplane/seeds \
 	podplane/website \
