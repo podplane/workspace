@@ -11,7 +11,7 @@
     "visibility": "public",
     "features": {
       "has_wiki": false,
-      "has_issues": true,
+      "has_issues": false,
       "has_projects": false,
       "has_discussions": false
     },
@@ -21,8 +21,8 @@
     "pull_requests": {
       "creation_policy": "collaborators_only",
       "allow_merge_commit": true,
-      "allow_squash_merge": true,
-      "allow_rebase_merge": true,
+      "allow_squash_merge": false,
+      "allow_rebase_merge": false,
       "allow_auto_merge": false,
       "delete_branch_on_merge": false,
       "allow_update_branch": true,
@@ -49,7 +49,7 @@
         "required_approving_review_count": 1,
         "dismiss_stale_reviews_on_push": true,
         "require_code_owner_review": false,
-        "require_last_push_approval": false
+        "require_last_push_approval": true
       },
       "required_status_checks": {
         "required": true,
@@ -69,5 +69,77 @@
   //     }
   //   }
   // }
-  "repos": {}
+  "repos": {
+    // repos with issues enabled
+    "easy-oidc/easy-oidc": {
+      "repository": {
+        "features": {
+          "has_issues": true
+        }
+      }
+    },
+    "netsy-dev/netsy": {
+      "repository": {
+        "features": {
+          "has_issues": true
+        }
+      }
+    },
+    "nstance-dev/nstance": {
+      "repository": {
+        "features": {
+          "has_issues": true
+        }
+      }
+    },
+    "podplane/podplane": {
+      "repository": {
+        "features": {
+          "has_issues": true
+        }
+      }
+    },
+    "podplane/components": {
+      "repository": {
+        "features": {
+          "has_issues": true
+        }
+      }
+    },
+    "podplane/vmconfig": {
+      "repository": {
+        "features": {
+          "has_issues": true
+        }
+      }
+    },
+    "podplane/templates": {
+      "repository": {
+        "features": {
+          "has_issues": true
+        }
+      }
+    },
+    "puidv7/puidv7-go": {
+      "repository": {
+        "features": {
+          "has_issues": true
+        }
+      }
+    },
+    "puidv7/puidv7-js": {
+      "repository": {
+        "features": {
+          "has_issues": true
+        }
+      }
+    },
+    "puidv7/terraform-provider-puidv7": {
+      "repository": {
+        "features": {
+          "has_issues": true
+        }
+      }
+    }
+  }
 }
