@@ -28,13 +28,26 @@ type repoPolicy struct {
 }
 
 type organizationPolicy struct {
-	DCOApp *dcoAppPolicy `json:"dco_app"`
+	DCOApp           *dcoAppPolicy           `json:"dco_app"`
+	RepositoryAccess *repositoryAccessPolicy `json:"repository_access"`
 }
 
 type dcoAppPolicy struct {
 	Required            *bool  `json:"required"`
 	Slug                string `json:"slug"`
 	RepositorySelection string `json:"repository_selection"`
+}
+
+type repositoryAccessPolicy struct {
+	Teams                    []teamAccessPolicy `json:"teams"`
+	AllowOtherTeams          *bool              `json:"allow_other_teams"`
+	AllowDirectCollaborators *bool              `json:"allow_direct_collaborators"`
+}
+
+type teamAccessPolicy struct {
+	Name       string `json:"name"`
+	Slug       string `json:"slug"`
+	Permission string `json:"permission"`
 }
 
 type repositoryPolicy struct {
@@ -143,6 +156,16 @@ type orgInstallation struct {
 	} `json:"app"`
 }
 
+type repoTeam struct {
+	Name       string `json:"name"`
+	Slug       string `json:"slug"`
+	Permission string `json:"permission"`
+}
+
+type repoCollaborator struct {
+	Login string `json:"login"`
+}
+
 type ruleset struct {
 	ID          int64      `json:"id"`
 	Name        string     `json:"name"`
@@ -196,10 +219,11 @@ func run(policyPath, makefilePath string) error {
 	}
 
 	orgs := orgsFromRepos(repos)
+	repoGroups := reposByOrg(repos)
 	orgFailures := 0
 	orgErrors := 0
 	for _, org := range orgs {
-		issues, err := auditOrg(org, pol.Organizations)
+		issues, err := auditOrg(org, repoGroups[org], pol.Organizations)
 		if err != nil {
 			orgErrors++
 			printResult("ERR", "org/"+org, []string{err.Error()})
@@ -271,6 +295,15 @@ func loadPolicy(path string) (policy, error) {
 		}
 		if pol.Organizations.DCOApp.RepositorySelection == "" {
 			pol.Organizations.DCOApp.RepositorySelection = "all"
+		}
+	}
+	if pol.Organizations.RepositoryAccess != nil {
+		for i := range pol.Organizations.RepositoryAccess.Teams {
+			team := &pol.Organizations.RepositoryAccess.Teams[i]
+			if team.Slug == "" {
+				team.Slug = teamSlug(team.Name)
+			}
+			team.Permission = githubPermission(team.Permission)
 		}
 	}
 	if pol.Ruleset.Target == "" {
@@ -489,8 +522,24 @@ func auditRepo(repo string, pol repoPolicy) ([]string, error) {
 	return issues, nil
 }
 
-// auditOrg checks organization-level GitHub App installation requirements.
-func auditOrg(org string, pol organizationPolicy) ([]string, error) {
+// auditOrg checks organization-level GitHub App installation and repository access requirements.
+func auditOrg(org string, repos []string, pol organizationPolicy) ([]string, error) {
+	var issues []string
+	appIssues, err := auditOrgApp(org, pol)
+	if err != nil {
+		return nil, err
+	}
+	issues = append(issues, appIssues...)
+	accessIssues, err := auditOrgRepositoryAccess(repos, pol.RepositoryAccess)
+	if err != nil {
+		return nil, err
+	}
+	issues = append(issues, accessIssues...)
+	return issues, nil
+}
+
+// auditOrgApp checks organization-level GitHub App installation requirements.
+func auditOrgApp(org string, pol organizationPolicy) ([]string, error) {
 	if pol.DCOApp == nil || pol.DCOApp.Required == nil || !*pol.DCOApp.Required {
 		return nil, nil
 	}
@@ -512,6 +561,59 @@ func auditOrg(org string, pol organizationPolicy) ([]string, error) {
 		return nil, nil
 	}
 	return []string{fmt.Sprintf("GitHub App %q is not installed", pol.DCOApp.Slug)}, nil
+}
+
+// auditOrgRepositoryAccess checks each managed repository has only the policy-allowed direct access grants.
+func auditOrgRepositoryAccess(repos []string, pol *repositoryAccessPolicy) ([]string, error) {
+	if pol == nil {
+		return nil, nil
+	}
+	wantTeams := map[string]teamAccessPolicy{}
+	for _, team := range pol.Teams {
+		wantTeams[team.Slug] = team
+	}
+	allowOtherTeams := pol.AllowOtherTeams != nil && *pol.AllowOtherTeams
+	allowDirectCollaborators := pol.AllowDirectCollaborators != nil && *pol.AllowDirectCollaborators
+
+	var issues []string
+	for _, repo := range repos {
+		teams, err := ghJSON[[]repoTeam]("/repos/" + repo + "/teams")
+		if err != nil {
+			return nil, err
+		}
+		gotTeams := map[string]repoTeam{}
+		for _, team := range teams {
+			gotTeams[team.Slug] = team
+		}
+		for slug, want := range wantTeams {
+			got, ok := gotTeams[slug]
+			if !ok {
+				issues = append(issues, fmt.Sprintf("%s: missing team %q with %s access", repo, teamLabel(want), policyPermission(want.Permission)))
+				continue
+			}
+			if got.Permission != want.Permission {
+				issues = append(issues, fmt.Sprintf("%s: team %q has %s access, want %s", repo, teamLabel(want), policyPermission(got.Permission), policyPermission(want.Permission)))
+			}
+		}
+		if !allowOtherTeams {
+			for _, got := range teams {
+				if _, ok := wantTeams[got.Slug]; ok {
+					continue
+				}
+				issues = append(issues, fmt.Sprintf("%s: unexpected team %q has %s access", repo, got.Name, policyPermission(got.Permission)))
+			}
+		}
+		if !allowDirectCollaborators {
+			collaborators, err := ghJSON[[]repoCollaborator]("/repos/" + repo + "/collaborators?affiliation=direct")
+			if err != nil {
+				return nil, err
+			}
+			for _, collaborator := range collaborators {
+				issues = append(issues, fmt.Sprintf("%s: unexpected direct collaborator %q", repo, collaborator.Login))
+			}
+		}
+	}
+	return issues, nil
 }
 
 // auditRepositorySettings compares repository metadata and ancillary endpoints against policy.
@@ -670,6 +772,45 @@ func boolPtr(value bool) *bool {
 	return &value
 }
 
+// teamSlug derives GitHub's default team slug from a display name.
+func teamSlug(name string) string {
+	name = strings.ToLower(strings.TrimSpace(name))
+	name = regexp.MustCompile(`[^a-z0-9]+`).ReplaceAllString(name, "-")
+	return strings.Trim(name, "-")
+}
+
+// githubPermission normalizes human policy names to GitHub API permission names.
+func githubPermission(permission string) string {
+	switch permission {
+	case "read":
+		return "pull"
+	case "write":
+		return "push"
+	default:
+		return permission
+	}
+}
+
+// policyPermission renders GitHub API permission names as human policy names.
+func policyPermission(permission string) string {
+	switch permission {
+	case "pull":
+		return "read"
+	case "push":
+		return "write"
+	default:
+		return permission
+	}
+}
+
+// teamLabel returns a stable human-readable team label for audit messages.
+func teamLabel(team teamAccessPolicy) string {
+	if team.Name != "" {
+		return team.Name
+	}
+	return team.Slug
+}
+
 // orgsFromRepos returns sorted unique GitHub organization names from owner/repo entries.
 func orgsFromRepos(repos []string) []string {
 	seen := map[string]bool{}
@@ -685,6 +826,18 @@ func orgsFromRepos(repos []string) []string {
 	}
 	sort.Strings(orgs)
 	return orgs
+}
+
+// reposByOrg groups sorted owner/repo entries by GitHub organization.
+func reposByOrg(repos []string) map[string][]string {
+	groups := map[string][]string{}
+	for _, repo := range repos {
+		owner, _, ok := strings.Cut(repo, "/")
+		if ok && owner != "" {
+			groups[owner] = append(groups[owner], repo)
+		}
+	}
+	return groups
 }
 
 // printResult prints one grouped audit result immediately after that subject is checked.

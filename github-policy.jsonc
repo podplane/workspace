@@ -4,6 +4,16 @@
       "required": true,
       "slug": "dco",
       "repository_selection": "all"
+    },
+    "repository_access": {
+      "teams": [
+        {
+          "name": "Podplane Contributors",
+          "permission": "write"
+        }
+      ],
+      "allow_other_teams": false,
+      "allow_direct_collaborators": false
     }
   },
   "repository": {
