@@ -130,6 +130,13 @@
         }
       }
     },
+    "podplane/s3lect": {
+      "repository": {
+        "features": {
+          "has_issues": true
+        }
+      }
+    },
     "puidv7/puidv7-go": {
       "repository": {
         "features": {
