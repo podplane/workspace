@@ -9,6 +9,7 @@ REPOS := \
 	podplane/podplane \
 	podplane/vmconfig \
 	podplane/components \
+	podplane/deps \
 	podplane/kube2iam-binaries \
 	podplane/templates \
 	podplane/hello \
