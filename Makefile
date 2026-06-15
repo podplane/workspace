@@ -13,7 +13,6 @@ REPOS := \
 	podplane/kube2iam-binaries \
 	podplane/templates \
 	podplane/hello \
-	podplane/workers \
 	podplane/s3lect \
 	podplane/homebrew-tap \
 	podplane/cla \
