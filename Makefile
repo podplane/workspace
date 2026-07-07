@@ -7,6 +7,8 @@ REPOS := \
 	podplane/.github \
 	podplane/workspace \
 	podplane/podplane \
+	podplane/specs \
+	podplane/ocimage \
 	podplane/vmconfig \
 	podplane/components \
 	podplane/deps \

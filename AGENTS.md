@@ -43,6 +43,8 @@ When the user describes a cross-component task, map project names to repositorie
 
 - `podplane/workspace` — this repository; workspace tooling and cross-repo coordination.
 - `podplane/podplane` — main Podplane product repository. Treat mentions of "Podplane", "Podplane CLI", "the CLI", "Podplane docs", or core Podplane orchestration as likely referring here unless context says otherwise.
+- `podplane/specs` — Podplane technical specification documents. Treat mentions of "Podplane specs", "technical specifications", or design/specification documents as likely referring here unless context says otherwise.
+- `podplane/ocimage` — Tool and underlying Podplane CLI package for handling OCI image builds. Treat mentions of "ocimage" as referring here unless context says otherwise.
 - `podplane/vmconfig` — Virtual Machine configuration system for Podplane. Treat mentions of "vmconfig", "VM config", "userdata", or configuring/running VM-backed workloads for Podplane as likely referring here.
 - `podplane/components` — Helm charts and configuration for the in-cluster components (cert-manager, Cilium, CoreDNS, Traefik, Gateway API CRDs, AWS EBS CSI driver, etc.) that turn a bare Podplane Kubernetes cluster into a PaaS. Treat mentions of "components", "Helm charts", "Flux apps", "cluster add-ons", or specific bundled components (cert-manager, Cilium, CoreDNS, Traefik, trust-manager, snapshot controller, EBS CSI) in a Podplane context as likely referring here.
 - `podplane/workers` — Cloudflare Workers monorepo for Podplane-related edge/background services.
