@@ -59,7 +59,7 @@ When the user describes a cross-component task, map project names to repositorie
 
 - `nstance-dev/nstance` — VM autoscaling/orchestration system for AWS, Google Cloud, Proxmox, Kubernetes, and local dev providers. Treat mentions of "nstance-server", "nstance-agent", "nstance-operator", "nstance docs", VM lifecycle, autoscaling, or instance orchestration as likely referring here.
 - `nstance-dev/terraform-aws-nstance` — AWS OpenTofu/Terraform module for Nstance.
-- `nstance-dev/terraform-gcp-nstance` — Google Cloud OpenTofu/Terraform module for Nstance.
+- `nstance-dev/terraform-google-nstance` — Google Cloud OpenTofu/Terraform module for Nstance.
 - `nstance-dev/website` — Nstance website.
 
 ### Easy OIDC

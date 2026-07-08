@@ -29,7 +29,7 @@ REPOS := \
 	nstance-dev/.github \
 	nstance-dev/nstance \
 	nstance-dev/terraform-aws-nstance \
-	nstance-dev/terraform-gcp-nstance \
+	nstance-dev/terraform-google-nstance \
 	nstance-dev/website \
 	easy-oidc/.github \
 	easy-oidc/easy-oidc \
