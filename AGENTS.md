@@ -66,6 +66,7 @@ When the user describes a cross-component task, map project names to repositorie
 
 - `easy-oidc/easy-oidc` — minimal OIDC server used for authentication/OIDC scenarios.
 - `easy-oidc/terraform-aws-easy-oidc` — AWS OpenTofu/Terraform module for Easy OIDC.
+- `easy-oidc/terraform-google-easy-oidc` — Google Cloud OpenTofu/Terraform module for Easy OIDC.
 - `easy-oidc/website` — Easy OIDC website.
 
 ### puidv7

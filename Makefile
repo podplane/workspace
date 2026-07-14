@@ -34,6 +34,7 @@ REPOS := \
 	easy-oidc/.github \
 	easy-oidc/easy-oidc \
 	easy-oidc/terraform-aws-easy-oidc \
+	easy-oidc/terraform-google-easy-oidc \
 	easy-oidc/website \
 	puidv7/.github \
 	puidv7/puidv7-go \
